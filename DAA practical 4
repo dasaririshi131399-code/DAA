@@ -1,54 +1,65 @@
 #include <iostream>
 #include <chrono>
 
-// Function for Iterative Factorial
-// Time Complexity: O(n)
-// Space Complexity: O(1)
-unsigned long long factorialIterative(int n) {
-    unsigned long long result = 1;
-    for (int i = 1; i <= n; ++i) {
-        result *= i;
+using namespace std;
+using namespace std::chrono;
+
+// Iterative Factorial
+long long iterativeFactorial(int n)
+{
+    long long fact = 1;
+    for (int i = 1; i <= n; i++)
+    {
+        fact *= i;
     }
-    return result;
+    return fact;
 }
 
-// Function for Recursive Factorial
-// Time Complexity: O(n)
-// Space Complexity: O(n) due to call stack
-unsigned long long factorialRecursive(int n) {
-    if (n <= 1) return 1;
-    return n * factorialRecursive(n - 1);
-}
-
-int main() {
-    int n;
-    std::cout << "Enter a non-negative integer (e.g., 20): ";
-    if (!(std::cin >> n) || n < 0) {
-        std::cerr << "Invalid input! Please enter a non-negative integer." << std::endl;
+// Recursive Factorial
+long long recursiveFactorial(int n)
+{
+    if (n == 0 || n == 1)
         return 1;
+    return n * recursiveFactorial(n - 1);
+}
+
+int main()
+{
+    int n;
+
+    cout << "Enter a non-negative integer (e.g., 20): ";
+    cin >> n;
+
+    if (n < 0)
+    {
+        cout << "Factorial is not defined for negative numbers." << endl;
+        return 0;
     }
 
-    // Measure Iterative Implementation
-    auto startIter = std::chrono::high_resolution_clock::now();
-    unsigned long long resIter = factorialIterative(n);
-    auto endIter = std::chrono::high_resolution_clock::now();
-    
-    std::chrono::duration<double, std::nano> durationIter = endIter - startIter;
+    // Iterative Timing
+    auto start1 = high_resolution_clock::now();
+    long long iterativeResult = iterativeFactorial(n);
+    auto stop1 = high_resolution_clock::now();
 
-    // Measure Recursive Implementation
-    auto startRec = std::chrono::high_resolution_clock::now();
-    unsigned long long resRec = factorialRecursive(n);
-    auto endRec = std::chrono::high_resolution_clock::now();
-    
-    std::chrono::duration<double, std::nano> durationRec = endRec - startRec;
+    auto iterativeTime = duration_cast<nanoseconds>(stop1 - start1);
 
-    // Output Results
-    std::cout << "\n--- Results for " << n << "! ---" << std::endl;
-    std::cout << "Iterative Result : " << resIter << std::endl;
-    std::cout << "Iterative Time   : " << durationIter.count() << " ns" << std::endl;
-    std::cout << "-------------------------------" << std::endl;
-    std::cout << "Recursive Result : " << resRec << std::endl;
-    std::cout << "Recursive Time   : " << durationRec.count() << " ns" << std::endl;
+    // Recursive Timing
+    auto start2 = high_resolution_clock::now();
+    long long recursiveResult = recursiveFactorial(n);
+    auto stop2 = high_resolution_clock::now();
+
+    auto recursiveTime = duration_cast<nanoseconds>(stop2 - start2);
+
+    // Output
+    cout << "\n--- Results for " << n << "! ---" << endl;
+
+    cout << "Iterative Result : " << iterativeResult << endl;
+    cout << "Iterative Time   : " << iterativeTime.count() << " ns" << endl;
+
+    cout << "------------------------------" << endl;
+
+    cout << "Recursive Result : " << recursiveResult << endl;
+    cout << "Recursive Time   : " << recursiveTime.count() << " ns" << endl;
 
     return 0;
 }
